@@ -1,6 +1,8 @@
 library(gdata)
 library(stringr)
-#India Data
+require(plyr); require(reshape2) # Prabhas says @hadley is awesome!
+
+setwd("~/Dropbox/ENI/ENI-slides/EnergyDemandModeling")
 
 scrape_WB_country_data <- function(CODE)
 {
@@ -18,119 +20,76 @@ scrape_WB_country_data <- function(CODE)
                                                         )),]
   return(short)
 }
-setwd("~/Dropbox/ENI/ENI-slides/EnergyDemandModeling")
 
-#Sub-Saharan Agrica Data
-ago <- scrape_WB_country_data('AGO') #angola
-ben <- scrape_WB_country_data('BEN') #Benin
-bwa <- scrape_WB_country_data('BWA') # Botswana
-bfa <- scrape_WB_country_data('BFA') # Burkina Faso
-bdi <- scrape_WB_country_data('BDI') # Burundi
-cmr <- scrape_WB_country_data('CMR') # Cameroon
-cpv <- scrape_WB_country_data('CPV') #Cape Verde
-caf <- scrape_WB_country_data('CAF') # Central Africa Republic
-tcd <- scrape_WB_country_data('TCD') #Chad Republic
-com <- scrape_WB_country_data('COM') #Comoros
-cog <- scrape_WB_country_data('COG') #Congo
-cod <- scrape_WB_country_data('COD') #Congo Dem Rep
-civ <- scrape_WB_country_data('CIV') # Cote de'Ivoire 
-civ <- scrape_WB_country_data('CIV') # Cote de'Ivoire 
-dji <- scrape_WB_country_data('DJI') #Djibouti
-eri <- scrape_WB_country_data('ERI') #Eritrea
-eth <- scrape_WB_country_data('ETH') #Ethiopia
-gab <- scrape_WB_country_data('GAB') #Gabon
-gmb <- scrape_WB_country_data('GMB') #Gambia
-gha <- scrape_WB_country_data('GHA') # Ghana
-gnb <- scrape_WB_country_data('GNB') #Guinea-Bissau
-ken <- scrape_WB_country_data('KEN') #kenya
-lso <- scrape_WB_country_data('LSO') #Lesotho
-lbr <- scrape_WB_country_data('LBR') #Liberia
-mdg <- scrape_WB_country_data('MDG') #Madagascar
-mwi <- scrape_WB_country_data('MWI') #Malawi
-mli <- scrape_WB_country_data('MLI') #Mali
-mrt <- scrape_WB_country_data('MRT') #Mauritania
-mus <- scrape_WB_country_data('MUS') #Mauritius
-moz<- scrape_WB_country_data('MOZ') #Mozambique
-nam<- scrape_WB_country_data('NAM') #Nambia
-ner <- scrape_WB_country_data('NER') #Niger Republic
-nga <- scrape_WB_country_data('NGA') #Nigeria
-rwa <- scrape_WB_country_data('RWA') #Rwanda
-stp <- scrape_WB_country_data('STP') #Sao Tome
-sen <- scrape_WB_country_data('SEN') #Senegal
-syc <- scrape_WB_country_data('SYC') #Seychelles
-sle <- scrape_WB_country_data('SLE') #sierra Leone
-som <- scrape_WB_country_data('SOM') #Somalia
-zaf <- scrape_WB_country_data('ZAF') #South Africa
-ssd <- scrape_WB_country_data('SSD') #south Sudan
-sdn <- scrape_WB_country_data('SDN') #Sudan
-swz <- scrape_WB_country_data('SWZ') #Swaziland
-tza <- scrape_WB_country_data('TZA') #Tanzania
-tgo <- scrape_WB_country_data('TGO') #Togo
-uga <- scrape_WB_country_data('UGA') #Uganda
-zmb <- scrape_WB_country_data('ZMB') #Zambia
-zwe <- scrape_WB_country_data('ZWE') #Zimbabwe
+#Sub-Saharan Africa Countries
+countries <- list("AGO" = "Angola", 
+                  "BEN" = "Benin",
+                  "BWA" = "Botswana",
+                  "BFA" = "Burkina Faso",
+                  "BDI" = "Burundi",
+                  "CMR" =  "Cameroon",
+                  "CPV" = "Cape Verde",
+                  "CAF" = "Central Africa Republic",
+                  "TCD" = "Chad Republic",
+                  "COM" = "Comoros",
+                  "COG" = "Congo",
+                  "COD" = "Congo Dem Rep",
+                  "CIV" = "Cote de'Ivoire",
+                  "CIV" = "Cote de'Ivoire",
+                  "DJI" = "Djibouti",
+                  "ERI" =  "Eritrea",
+                  "ETH" = "Ethiopia",
+                  "GAB" = "Gabon",
+                  "GMB" = "Gambia",
+                  "GHA" = "Ghana",
+                  "GNB" = "Guinea-Bissau",
+                  "KEN" = "Kenya",
+                  "LSO" = "Lesotho",
+                  "LBR" = "Liberia",
+                  "MDG" = "Madagascar",
+                  "MWI" = "Malawi",
+                  "MLI" = "Mali",
+                  "MRT" = "Mauritania",
+                  "MUS" = "Mauritius",
+                  "MOZ" = "Mozambique",
+                  "NAM" = "Nambia",
+                  "NER" = "Niger Republic",
+                  "NGA" = "Nigeria",
+                  "RWA" = "Rwanda",
+                  "STP" = "Sao Tome",
+                  "SEN" = "Senegal",
+                  "SYC" = "Seychelles",
+                  "SLE" = "sierra Leone",
+                  "SOM" = "Somalia",
+                  "ZAF" = "South Africa",
+                  "SSD" = "south Sudan",
+                  "SDN" = "Sudan",
+                  "SWZ"= "Swaziland",
+                  "TZA" = "Tanzania",
+                  "TGO" =  "Togo",
+                  "UGA" = "Uganda",
+                  "ZMB" = "Zambia",
+                  "ZWE" = "Zimbabwe",
+                  #Initially Omitted Countries
+                  "MYT" = "Myayotte",
+                  "GIN" = "Guinea",
+                  "GNQ" = "Equatorial Guinea",
+                  #USA Data
+                  "USA" = "USA"
+)
 
-myt <- scrape_WB_country_data('MYT') #Myayotte
-gin <- scrape_WB_country_data('GIN') #Guinea 
-gnq <- scrape_WB_country_data('GNQ') #Equatorial Guinea 
+scraped_data <- llply(names(countries), 
+                      scrape_WB_country_data) # boom! a list of dataframes. will take forever to run though!
 
-#USA Data
-usa <- scrape_WB_country_data('USA')
-
+names(scraped_data) <- names(countries)
 
 #combine and export
 year <- 'X2010'
-wb.data <- cbind(ago[,c('Indicator.Name','Indicator.Code',year)],
-                 ben[,year],
-                 bwa[,year],
-                 bfa[,year],
-                 bdi[,year],
-                 cmr[,year],
-                 cpv[,year],
-                 caf[,year],
-                 tcd[,year],
-                 com[,year],
-                 cog[,year],
-                 cod[,year],
-                 civ[,year],
-                 dji[,year],
-                 eri[,year],
-                 eth[,year],
-                 gab[,year],
-                 gmb[,year],
-                 gha[,year],
-                 gnb[,year],
-                 ken[,year],
-                 lso[,year],
-                 lbr[,year],
-                 mdg[,year],
-                 mwi[,year],
-                 mli[,year],
-                 mrt[,year],
-                 mus[,year],
-                 moz[,year],
-                 nam[,year],
-                 ner[,year],
-                 nga[,year],
-                 rwa[,year],
-                 stp[,year],
-                 sen[,year],
-                 syc[,year],
-                 sle[,year],
-                 som[,year],
-                 zaf[,year],
-                 ssd[,year],
-                 sdn[,year],
-                 swz[,year],
-                 tza[,year],
-                 tgo[,year],
-                 uga[,year],
-                 zmb[,year],
-                 zwe[,year],
-                 myt[,year],
-                 gin[,year],
-                 gnq[,year],
-                 usa[,year]
-)
+
+wb_data_flat <- ldply(scraped_data, function(df) { df[[year]]}) # unfortunately, ldply uses an rbind at the end, so our data is flipped around
+wb_data_tall <- melt(wb_data_flat, id.vars='.id', value.name=year) # flip the data.frame
+wb_data_tall <- cbind(scraped_data$AGO[,c("Indicator.Name","Indicator.Code")], wb_data_tall) # bring in indicator name and code
+wb_data_tall$variable <- NULL
+
              
-write.csv(wb.data, "WorldBankKeyEnergyUsage-SubSaharanAfrica-1990-20131211.csv", row.names=F)
+write.csv(wb_data_tall, "WorldBankKeyEnergyUsage-SubSaharanAfrica-1990-20131211.csv", row.names=F)
