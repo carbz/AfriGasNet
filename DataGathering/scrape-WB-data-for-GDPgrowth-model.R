@@ -22,63 +22,12 @@ scrape_WB_country_data <- function(CODE)
 }
 
 #Sub-Saharan Africa Countries
-countries <- list("AGO" = "Angola", 
-                  "BEN" = "Benin",
-                  "BWA" = "Botswana",
-                  "BFA" = "Burkina Faso",
-                  "BDI" = "Burundi",
-                  "CMR" =  "Cameroon",
-                  "CPV" = "Cape Verde",
-                  "CAF" = "Central Africa Republic",
-                  "TCD" = "Chad Republic",
-                  "COM" = "Comoros",
-                  "COG" = "Congo",
-                  "COD" = "Congo Dem Rep",
-                  "CIV" = "Cote de'Ivoire",
-                  "CIV" = "Cote de'Ivoire",
-                  "DJI" = "Djibouti",
-                  "ERI" =  "Eritrea",
-                  "ETH" = "Ethiopia",
-                  "GAB" = "Gabon",
-                  "GMB" = "Gambia",
-                  "GHA" = "Ghana",
-                  "GNB" = "Guinea-Bissau",
-                  "KEN" = "Kenya",
-                  "LSO" = "Lesotho",
-                  "LBR" = "Liberia",
-                  "MDG" = "Madagascar",
-                  "MWI" = "Malawi",
-                  "MLI" = "Mali",
-                  "MRT" = "Mauritania",
-                  "MUS" = "Mauritius",
-                  "MOZ" = "Mozambique",
-                  "NAM" = "Nambia",
-                  "NER" = "Niger Republic",
-                  "NGA" = "Nigeria",
-                  "RWA" = "Rwanda",
-                  "STP" = "Sao Tome",
-                  "SEN" = "Senegal",
-                  "SYC" = "Seychelles",
-                  "SLE" = "sierra Leone",
-                  "SOM" = "Somalia",
-                  "ZAF" = "South Africa",
-                  "SSD" = "south Sudan",
-                  "SDN" = "Sudan",
-                  "SWZ"= "Swaziland",
-                  "TZA" = "Tanzania",
-                  "TGO" =  "Togo",
-                  "UGA" = "Uganda",
-                  "ZMB" = "Zambia",
-                  "ZWE" = "Zimbabwe",
-                  #Initially Omitted Countries
-                  "MYT" = "Myayotte",
-                  "GIN" = "Guinea",
-                  "GNQ" = "Equatorial Guinea",
-                  #USA Data
-                  "USA" = "USA"
-)
+countries <- read.delim("~/github/local/AfriGasNet/DataGathering/CountryList.txt", 
+                            header = TRUE, 
+                            sep = ","
+                            )
 
-scraped_data <- llply(names(countries), 
+scraped_data <- llply(rownames(countries), 
                       scrape_WB_country_data) # boom! a list of dataframes. will take forever to run though!
 
 names(scraped_data) <- names(countries)
